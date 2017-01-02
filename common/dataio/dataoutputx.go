@@ -3,6 +3,7 @@ package dataio
 import (
     "encoding/binary"
     "bytes"
+    "fmt"
 
 )
 
@@ -28,15 +29,22 @@ func NewDataOutputX() *dataOutputX {
 
 
 
-func (out *dataOutputX) WriteInt(value int) *dataOutputX {
+func (out *dataOutputX) WriteInt32(value int32) *dataOutputX {
     out.written += 4;
-    binary.Write(out.buffer,binary.LittleEndian,&value)
+    err  := binary.Write(out.buffer,binary.BigEndian, value)
+    if err != nil {
+        fmt.Println("Failed to binary write : " ,err)
+    }
     return out;
     
 }
 
-func (out *dataOutputX) ReadInt(value *int) {
-    binary.Read(out.buffer,binary.BigEndian,&value)
+func (out *dataOutputX) ReadInt32(value *int32) {
+    err:= binary.Read(out.buffer,binary.BigEndian, value)
+    if err != nil {
+        fmt.Println("Faileed to binary read :", err)
+        value = nil
+    }
     
 }
 
