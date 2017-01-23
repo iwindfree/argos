@@ -1,14 +1,14 @@
 package dataio
-import (
-   "testing"
-  
-)
+
+import "testing"
 
 func TestWriteInt(t *testing.T) {
-    out := NewDataOutputX()
-    out.WriteInt(100)
-    var a int
-    out.ReadInt(&a)
-    t.Log("the value of a : %d", a)
+	out := NewDataOutputX()
+	out.WriteInt32(100)
+	out.WriteInt32(200)
+	var a int32
+	out.ReadInt32(&a)
+	t.Log("the value of a : %d", a)
+	out.ReadInt32(&a)
+	t.Log("the value of a : %d", a)
 }
-
