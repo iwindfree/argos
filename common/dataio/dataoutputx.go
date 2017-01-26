@@ -64,7 +64,3 @@ func (out *DataOutputX) ReadInt32(value *int32) {
 	}
 
 }
-
-func main() {
-	fmt.Println("hello")
-}
