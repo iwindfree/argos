@@ -3,10 +3,15 @@ package main
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"sync"
+	"time"
 
 	"github.com/iwindfree/argos/agent/manager"
 )
+
+var pidfile string
+var f *os.File
 
 func main() {
 	var wg sync.WaitGroup
@@ -32,6 +37,11 @@ func start(workGroup *sync.WaitGroup) {
 	workGroup.Add(1)
 	displayLogo()
 	manager.ServiceStart()
+	writePid()
+
+	for fileExist(pidfile) {
+		time.Sleep(1 * time.Second)
+	}
 
 }
 
@@ -50,4 +60,19 @@ func fileExist(filename string) bool {
 		}
 	}
 	return true
+}
+
+func writePid() error {
+	path, err := os.Getwd()
+	if err == nil {
+		pidfile = path + "/" + strconv.Itoa(os.Getpid()) + ".scouter"
+		f, err = os.Create(pidfile)
+		if err != nil {
+			return err
+		}
+		defer f.Close()
+	} else {
+		return nil
+	}
+	return nil
 }
