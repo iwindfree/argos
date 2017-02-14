@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"strconv"
-	"sync"
 	"time"
 
 	"github.com/iwindfree/argos/agent/manager"
@@ -14,27 +13,20 @@ var pidfile string
 var f *os.File
 
 func main() {
-	var wg sync.WaitGroup
 	command := os.Args[1]
 	switch command {
 	case "start":
-		start(&wg)
+		start()
 	case "stop":
 		stop()
 	default:
 
 	}
-
-	manager.ServiceStart()
-	wg.Wait()
-	for {
-
-	}
 }
 
-func start(workGroup *sync.WaitGroup) {
+func start() {
 	displayLogo()
-	workGroup.Add(1)
+	//workGroup.Add(1)
 	displayLogo()
 	manager.ServiceStart()
 	writePid()
@@ -43,10 +35,15 @@ func start(workGroup *sync.WaitGroup) {
 		time.Sleep(1 * time.Second)
 	}
 
+	return
 }
 
 func stop() {
-
+	if fileExist(pidfile) {
+		os.Remove(pidfile)
+	} else {
+		fmt.Println("Agent is not running.")
+	}
 }
 
 func displayLogo() {
