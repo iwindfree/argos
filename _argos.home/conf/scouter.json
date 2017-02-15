@@ -1,11 +1,24 @@
 // This is a config file for scouter mysql/mariadb agent.
-{ "instances": {
+{ 
+    "configurations": {
         "scouter.server": "127.0.0.1",
         "scouter.server.udp.port": "6100",
         "scouter.server.tcp.port": "6100",
-        "db.server": "db addr",
-        "db.port": "3306",
-        "db.user": "user_name",
-        "db.password": "user_password"
+        "instances": [
+            {
+                "db.server": "db addr",
+                "db.port": "3306",
+                "db.user": "user_name",
+                "db.password": "user_password",
+                "db.slowquery.path": "/path/to/slow_query"
+            },
+            {
+                "db.server": "db addr",
+                "db.port": "3308",
+                "db.user": "user_name",
+                "db.password": "user_password",
+                "db.slowquery.path": "/path/to/slow_query"
+            }
+        ]
     }
 }
