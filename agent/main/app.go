@@ -4,8 +4,10 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 
+	"github.com/iwindfree/argos/agent/config"
 	"github.com/iwindfree/argos/agent/manager"
 )
 
@@ -13,21 +15,18 @@ var pidfile string
 var f *os.File
 
 func main() {
-	command := os.Args[1]
-	switch command {
-	case "start":
-		start()
-	case "stop":
-		stop()
-	default:
-
+	if len(os.Args) > 1 {
+		readArgs(os.Args)
 	}
+	start()
+
 }
 
 func start() {
 	displayLogo()
 	//workGroup.Add(1)
-	displayLogo()
+	//var conf *config.Configuration
+	config.GetInstance()
 	manager.ServiceStart()
 	writePid()
 
@@ -72,4 +71,17 @@ func writePid() error {
 		return nil
 	}
 	return nil
+}
+
+func usage() {
+	fmt.Printf("need arguements")
+}
+
+func readArgs(args []string) {
+	for _, value := range args {
+		argsItem := strings.Split(value, "=")
+		if argsItem[0] == "scouter.config" {
+			config.ConfFilePath = argsItem[1]
+		}
+	}
 }
