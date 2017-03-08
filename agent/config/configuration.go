@@ -19,45 +19,24 @@ var confFileModdTime time.Time
 var confFileSize int64
 
 type ConfObject struct {
-	Object Collector
+	Configurations Collector
 }
 
 type Collector struct {
-	server    string
-	udpPort   string
-	tcpPort   string
-	instances []DBInstance
+	IP        string       `json:"collector.ip"`
+	Udpport   string       `json:"collector.udp.port"`
+	Tcpport   string       `json:"collector.tcp.port"`
+	Instances []DBInstance `json:"db.instances"`
 }
 
 type DBInstance struct {
-	server    string
-	port      string
-	user      string
-	password  string
-	slowquery string
+	IP        string `json:"db.ip"`
+	Port      string `json:"db.port"`
+	User      string `json:"db.user"`
+	Password  string `json:"db.password"`
+	Slowquery string `json:"db.slowquery"`
 }
 
-/*
-type (
-	// for db instacne.
-	dbInstance struct {
-		server    string `json:"db.server"`
-		port      string `json:"db.port"`
-		user      string `json:"db.user"`
-		password  string `json:"db.password"`
-		slowquery string  `json:"db.slowquery.path"`
-	}
-	// for data collector.
-	configure struct {
-		configureData struct {
-			//collectorIp      string       `json:"scouter.server"`
-			//collectorUdpPort string       `json:"scouter.server.udp.port"`
-			//collectorTcpPort string       `json:"scouter.server.tcp.port"`
-			instances []dbInstance `json:"instacnes"`
-		} `json:"configurations"`
-	}
-)
-*/
 func (conf *Configuration) load() {
 	var confobj ConfObject
 	fileInfo, e := ConfFile.Stat()
@@ -68,9 +47,8 @@ func (conf *Configuration) load() {
 	if confFileModdTime != fileInfo.ModTime() || confFileSize != fileInfo.Size() {
 		file, err := ioutil.ReadFile(ConfFilePath)
 		if err != nil {
-			//todo error
+			//todo :
 		}
-		//json.NewDecoder(ConfFile).Decode(&confobj)
 		json.Unmarshal(file, &confobj)
 		confFileSize = fileInfo.Size()
 		confFileModdTime = fileInfo.ModTime()
